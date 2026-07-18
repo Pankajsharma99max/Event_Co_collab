@@ -3,16 +3,7 @@
 import { signIn } from "next-auth/react";
 import { withBasePath } from "@/lib/base-path";
 
-// Only renders once next-auth confirms Google is actually configured
-// server-side (GOOGLE_CLIENT_ID/SECRET set) — avoids showing a dead button
-// (and an orphaned divider) in environments without OAuth set up. Uses
-// getProviders() rather than a raw fetch so it respects the auth base path
-// under a sub-path deployment.
 export function GoogleAuthSection({ callbackUrl }: { callbackUrl: string }) {
-  const available = Boolean(process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID);
-
-  if (!available) return null;
-
   return (
     <div className="mb-6">
       <button
