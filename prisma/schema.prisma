@@ -1,0 +1,121 @@
+// Prisma schema for Devnovate Submit
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "sqlite"
+}
+
+enum EventStatus {
+  DRAFT
+  PENDING_VERIFICATION
+  VERIFIED
+  PUBLISHED
+  REJECTED
+}
+
+enum SponsorshipStatus {
+  OPEN
+  CLOSED
+}
+
+enum UserRole {
+  USER
+  ADMIN
+}
+
+model User {
+  id           String   @id @default(cuid())
+  email        String   @unique
+  name         String
+  // Null for accounts created via an OAuth provider (e.g. Google) that never set a password.
+  passwordHash String?
+  role         UserRole @default(USER)
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  events        Event[]
+  sponsorships  Sponsorship[]
+}
+
+model Event {
+  id                String      @id @default(cuid())
+  title             String
+  // Description and dates are no longer collected at submission time — the
+  // organizer's own Luma/event page is the source of truth for those, and
+  // asking for them here was redundant. Kept nullable rather than removed
+  // outright so existing rows and any future re-introduction stay simple.
+  description       String?
+  eventFormat       String // "IN_PERSON" | "HYBRID"
+  eventType         String // "GENERAL_MEETUP" | "HACKATHON" | "CONFERENCE" | "WORKSHOP" | "DEMO_NIGHT" | "PARTY"
+  ticketingType     String // "FREE" | "PAID" | "HYBRID"
+  expectedAttendees String? // "UNDER_50" | "50_150" | "150_300" | "300_PLUS"
+  // JSON-encoded string[] of theme tags (e.g. ["agents","safety"]) — SQLite has no native array column type.
+  themes            String
+  wantsSponsorship  Boolean     @default(false)
+  additionalInfo    String?
+  startsAt          DateTime?
+  endsAt            DateTime?
+  location          String
+  websiteUrl        String
+  // Which co-host verification strategy applies, derived from websiteUrl's
+  // hostname at submission time: "DEVNOVATE" | "LUMA" | "OTHER".
+  platform          String      @default("OTHER")
+  // The canonical event ID/slug on devnovate.co — only applicable when platform is "DEVNOVATE".
+  devnovateEventId  String?
+  status            EventStatus @default(DRAFT)
+
+  submittedById     String
+  submittedBy       User        @relation(fields: [submittedById], references: [id], onDelete: Cascade)
+
+  requiredCoHostEmail String    @default("aviral.lancer@gmail.com")
+  // Luma profile id (e.g. "usr-kpQUGVbfViXAj2x") that must appear as a host on Luma events.
+  requiredLumaHostId  String    @default("usr-kpQUGVbfViXAj2x")
+  // Unique per-event proof-of-control token for platform === "OTHER" —
+  // organizer pastes this into their event's public description.
+  verificationToken   String    @unique
+  coHostVerifiedAt     DateTime?
+  listedOnDevnovateAt  DateTime?
+
+  createdAt         DateTime    @default(now())
+  updatedAt         DateTime    @updatedAt
+
+  verificationLogs  VerificationLog[]
+
+  @@index([submittedById])
+  @@index([devnovateEventId])
+}
+
+model VerificationLog {
+  id          String   @id @default(cuid())
+  eventId     String
+  event       Event    @relation(fields: [eventId], references: [id], onDelete: Cascade)
+  success     Boolean
+  reason      String
+  requestedBy String
+  ipAddress   String
+  createdAt   DateTime @default(now())
+
+  @@index([eventId])
+}
+
+model Sponsorship {
+  id          String            @id @default(cuid())
+  title       String
+  description String
+  budgetRange String
+  contactEmail String
+  status      SponsorshipStatus @default(OPEN)
+
+  postedById  String
+  postedBy    User              @relation(fields: [postedById], references: [id], onDelete: Cascade)
+
+  createdAt   DateTime          @default(now())
+  updatedAt   DateTime          @updatedAt
+
+  @@index([postedById])
+}

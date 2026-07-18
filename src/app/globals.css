@@ -1,0 +1,64 @@
+@import "tailwindcss";
+
+:root {
+  --background: #000000;
+  --surface: #141414;
+  --surface-2: #1f1f1f;
+  --border: rgba(255, 255, 255, 0.12);
+  --border-strong: rgba(255, 255, 255, 0.18);
+  --foreground: #ffffff;
+  --muted: #9a9a9a;
+  --muted-2: rgba(255, 255, 255, 0.55);
+  --glass: rgba(255, 255, 255, 0.04);
+  --glass-strong: rgba(255, 255, 255, 0.08);
+  --accent: #22c55e;
+  --danger: #ef4444;
+  --success: #34d399;
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-surface: var(--surface);
+  --color-surface-2: var(--surface-2);
+  --color-border: var(--border);
+  --color-border-strong: var(--border-strong);
+  --color-foreground: var(--foreground);
+  --color-muted: var(--muted);
+  --color-muted-2: var(--muted-2);
+  --color-glass: var(--glass);
+  --color-glass-strong: var(--glass-strong);
+  --color-accent: var(--accent);
+  --color-danger: var(--danger);
+  --color-success: var(--success);
+  --font-sans: var(--font-geist-sans);
+  --font-mono: var(--font-geist-mono);
+  --font-display: var(--font-serif-display);
+}
+
+html {
+  /* Makes native controls (date/time pickers, scrollbars) render in their
+     dark variant instead of a jarring light popup on this dark theme. */
+  color-scheme: dark;
+}
+
+body {
+  background:
+    radial-gradient(700px 700px at 90% -10%, rgba(255, 255, 255, 0.05), transparent 60%),
+    radial-gradient(500px 400px at -5% 40%, rgba(255, 255, 255, 0.035), transparent 60%),
+    var(--background);
+  color: var(--foreground);
+}
+
+::selection {
+  background: var(--foreground);
+  color: black;
+}
+
+input[type="datetime-local"]::-webkit-calendar-picker-indicator {
+  cursor: pointer;
+  opacity: 0.7;
+  filter: invert(1);
+}
+input[type="datetime-local"]::-webkit-calendar-picker-indicator:hover {
+  opacity: 1;
+}
