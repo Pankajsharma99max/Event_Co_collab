@@ -66,12 +66,6 @@ export async function PATCH(req: Request, { params }: { params: Promise<{ id: st
   }
 
   const platform = detectPlatform(data.websiteUrl);
-  if (platform === "DEVNOVATE" && !data.devnovateEventId) {
-    return NextResponse.json(
-      { error: "Devnovate.co event slug is required for events hosted on devnovate.co" },
-      { status: 400 }
-    );
-  }
 
   const event = await prisma.event.update({
     where: { id },

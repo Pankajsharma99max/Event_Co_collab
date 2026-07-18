@@ -55,12 +55,6 @@ export async function POST(req: Request) {
   }
 
   const platform = detectPlatform(data.websiteUrl);
-  if (platform === "DEVNOVATE" && !data.devnovateEventId) {
-    return NextResponse.json(
-      { error: "Devnovate.co event slug is required for events hosted on devnovate.co" },
-      { status: 400 }
-    );
-  }
 
   const event = await prisma.event.create({
     data: {

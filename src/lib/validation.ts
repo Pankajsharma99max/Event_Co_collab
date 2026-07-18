@@ -61,10 +61,25 @@ export const eventDetailsSchema = z.object({
   startsAt: isoDate.optional().or(z.literal("")),
   endsAt: isoDate.optional().or(z.literal("")),
   location: z.string().trim().min(2).max(200),
-  // Primarily a Luma event link now, but still accepts any URL — devnovate.co
-  // and other platforms remain supported on the backend (manual review /
-  // token verification), just no longer have their own dedicated form fields.
-  websiteUrl: z.string().trim().url().max(2000),
+  // Restrict to Luma event URLs (lu.ma or luma.com)
+  websiteUrl: z
+    .string()
+    .trim()
+    .url()
+    .max(2000)
+    .refine((val) => {
+      try {
+        const hostname = new URL(val).hostname.toLowerCase();
+        return (
+          hostname === "luma.com" ||
+          hostname === "lu.ma" ||
+          hostname.endsWith(".lu.ma") ||
+          hostname.endsWith(".luma.com")
+        );
+      } catch {
+        return false;
+      }
+    }, "Only Luma event URLs (lu.ma or luma.com) are supported"),
   // Only required for events hosted on devnovate.co — enforced in the API
   // route once the platform is derived from websiteUrl, not here, since that
   // derivation needs the parsed URL first. No longer has its own form field;

@@ -383,136 +383,54 @@ export function SubmitWizard() {
           <h1 className="text-xl font-bold">Collaboration options</h1>
 
           <div className="mt-6 rounded-xl border border-border bg-surface-2 p-5">
-            {event.platform === "OTHER" ? (
-              <>
-                <h2 className="font-semibold">Verify with a code</h2>
-                <p className="mt-1 text-sm text-muted">
-                  We don&apos;t have a direct host-check for this platform, so verify by
-                  proving you can edit the event listing:
-                </p>
+            <>
+              <h2 className="font-semibold">Add as co-host</h2>
+              <p className="mt-1 text-sm text-muted">
+                To list this event on Devnovate, add us as a host on your Luma event:
+              </p>
 
-                <div className="mt-4 rounded-lg border border-border bg-background/60 p-4 text-sm">
-                  <p className="font-medium text-foreground">Instructions:</p>
-                  <ol className="mt-2 list-decimal space-y-2 pl-4 text-muted">
-                    <li>
-                      Open your{" "}
-                      <a
-                        href={event.websiteUrl}
-                        target="_blank"
-                        rel="noopener noreferrer nofollow"
-                        className="text-foreground underline underline-offset-2"
+              <div className="mt-4 rounded-lg border border-border bg-background/60 p-4 text-sm">
+                <p className="font-medium text-foreground">Instructions:</p>
+                <ol className="mt-2 list-decimal space-y-2 pl-4 text-muted">
+                  <li>
+                    Open your{" "}
+                    <a
+                      href={event.websiteUrl}
+                      target="_blank"
+                      rel="noopener noreferrer nofollow"
+                      className="text-foreground underline underline-offset-2"
+                    >
+                      Luma event
+                    </a>{" "}
+                    and open the host management panel
+                  </li>
+                  <li>Click &quot;Add Host&quot; and search by email</li>
+                  <li>
+                    Add{" "}
+                    <span className="inline-flex items-center gap-1.5 rounded-full border border-border bg-glass px-2.5 py-1 font-mono text-xs text-foreground">
+                      {REQUIRED_COHOST_EMAIL}
+                      <button
+                        type="button"
+                        onClick={() => copyText(REQUIRED_COHOST_EMAIL)}
+                        className="text-muted-2 hover:text-foreground"
                       >
-                        event page
-                      </a>{" "}
-                      and edit its public description
-                    </li>
-                    <li>
-                      Paste this exact code anywhere in the description:{" "}
-                      <span className="mt-1 inline-flex items-center gap-1.5 rounded-full border border-border bg-glass px-2.5 py-1 font-mono text-xs text-foreground">
-                        {event.verificationToken}
-                        <button
-                          type="button"
-                          onClick={() => copyText(event.verificationToken)}
-                          className="text-muted-2 hover:text-foreground"
-                        >
-                          {copied ? "Copied" : "Copy"}
-                        </button>
-                      </span>
-                    </li>
-                    <li>Save/publish the page so it&apos;s visible to the public</li>
-                    <li>Click Verify below — you can remove the code afterward</li>
-                  </ol>
-                </div>
-              </>
-            ) : (
-              <>
-                <h2 className="font-semibold">
-                  Add as co-host {event.platform === "LUMA" ? "" : "Manager"}
-                </h2>
-                <p className="mt-1 text-sm text-muted">
-                  To list this event on Devnovate, add us as a host on your{" "}
-                  {event.platform === "LUMA" ? "Luma" : "devnovate.co"} event
-                  {event.platform === "DEVNOVATE"
-                    ? " — our team confirms this manually, so there's no live check here."
-                    : ":"}
-                </p>
-
-                <div className="mt-4 rounded-lg border border-border bg-background/60 p-4 text-sm">
-                  <p className="font-medium text-foreground">Instructions:</p>
-                  {event.platform === "LUMA" ? (
-                    <ol className="mt-2 list-decimal space-y-2 pl-4 text-muted">
-                      <li>
-                        Open your{" "}
-                        <a
-                          href={event.websiteUrl}
-                          target="_blank"
-                          rel="noopener noreferrer nofollow"
-                          className="text-foreground underline underline-offset-2"
-                        >
-                          Luma event
-                        </a>{" "}
-                        and open the host management panel
-                      </li>
-                      <li>Click &quot;Add Host&quot; and search by email</li>
-                      <li>
-                        Add{" "}
-                        <span className="inline-flex items-center gap-1.5 rounded-full border border-border bg-glass px-2.5 py-1 font-mono text-xs text-foreground">
-                          {REQUIRED_COHOST_EMAIL}
-                          <button
-                            type="button"
-                            onClick={() => copyText(REQUIRED_COHOST_EMAIL)}
-                            className="text-muted-2 hover:text-foreground"
-                          >
-                            {copied ? "Copied" : "Copy"}
-                          </button>
-                        </span>{" "}
-                        — that&apos;s the email on{" "}
-                        <a
-                          href={`https://luma.com/user/${event.requiredLumaHostId}`}
-                          target="_blank"
-                          rel="noopener noreferrer nofollow"
-                          className="underline underline-offset-2"
-                        >
-                          this Luma profile
-                        </a>
-                      </li>
-                      <li>Make sure the event is published/public on Luma</li>
-                    </ol>
-                  ) : (
-                    <ol className="mt-2 list-decimal space-y-2 pl-4 text-muted">
-                      <li>
-                        Open your event&apos;s{" "}
-                        <a
-                          href={event.websiteUrl}
-                          target="_blank"
-                          rel="noopener noreferrer nofollow"
-                          className="text-foreground underline underline-offset-2"
-                        >
-                          management page
-                        </a>{" "}
-                        on devnovate.co
-                      </li>
-                      <li>Scroll down to the &quot;Hosts&quot; section and click Add Host</li>
-                      <li>
-                        Add{" "}
-                        <span className="inline-flex items-center gap-1.5 rounded-full border border-border bg-glass px-2.5 py-1 font-mono text-xs text-foreground">
-                          {REQUIRED_COHOST_EMAIL}
-                          <button
-                            type="button"
-                            onClick={() => copyText(REQUIRED_COHOST_EMAIL)}
-                            className="text-muted-2 hover:text-foreground"
-                          >
-                            {copied ? "Copied" : "Copy"}
-                          </button>
-                        </span>
-                      </li>
-                      <li>with &quot;Manager&quot; permissions</li>
-                      <li>Publish/list the event on devnovate.co if it isn&apos;t already public</li>
-                    </ol>
-                  )}
-                </div>
-              </>
-            )}
+                        {copied ? "Copied" : "Copy"}
+                      </button>
+                    </span>{" "}
+                    — that&apos;s the email on{" "}
+                    <a
+                      href={`https://luma.com/user/${event.requiredLumaHostId}`}
+                      target="_blank"
+                      rel="noopener noreferrer nofollow"
+                      className="underline underline-offset-2"
+                    >
+                      this Luma profile
+                    </a>
+                  </li>
+                  <li>Make sure the event is published/public on Luma</li>
+                </ol>
+              </div>
+            </>
 
             {verifyState.status === "error" && (
               <p className="mt-4 rounded-lg border border-danger/30 bg-danger/10 px-3 py-2 text-sm text-danger">
@@ -538,11 +456,7 @@ export function SubmitWizard() {
                 disabled={verifyState.status === "checking"}
                 className="mt-5 w-full rounded-full bg-white px-4 py-3 font-medium text-black transition hover:bg-white/90 disabled:opacity-60"
               >
-                {verifyState.status === "checking"
-                  ? "Submitting…"
-                  : event.platform === "DEVNOVATE"
-                    ? "Submit for review"
-                    : "Verify & Continue"}
+                {verifyState.status === "checking" ? "Submitting…" : "Verify & Continue"}
               </button>
             )}
           </div>

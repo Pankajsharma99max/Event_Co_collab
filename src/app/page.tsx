@@ -2,6 +2,8 @@ import Link from "next/link";
 import { prisma } from "@/lib/prisma";
 import { EventCard } from "@/components/event-card";
 
+export const dynamic = "force-dynamic";
+
 export default async function Home() {
   const events = await prisma.event.findMany({
     where: { status: "PUBLISHED" },
@@ -59,7 +61,7 @@ export default async function Home() {
         <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
           <FeatureCard title="Submit in minutes" desc="Tell us about your event once — title, format, location, and your Luma link." />
           <SpotlightCard />
-          <FeatureCard title="Co-host verification" desc="Luma and other platforms are confirmed automatically; devnovate.co listings get a quick manual check from our team." />
+          <FeatureCard title="Co-host verification" desc="Luma events are verified automatically by confirming the required Devnovate organizer is added as a co-host." />
           <FeatureCard title="Organizer dashboard" desc="Track every submission's status — pending, verified, published — in one place." />
         </div>
       </section>
@@ -100,7 +102,7 @@ function SpotlightCard() {
       <p className="text-sm font-medium text-black/60">Devnovate Submit</p>
       <div className="mt-4 grid grid-cols-2 gap-x-8 gap-y-3">
         <Stat value="Auto + manual" label="verification" />
-        <Stat value="3" label="platforms supported" />
+        <Stat value="Luma" label="platform supported" />
       </div>
     </div>
   );
