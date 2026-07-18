@@ -23,12 +23,6 @@ export function GoogleAuthSection({ callbackUrl }: { callbackUrl: string }) {
         <GoogleIcon />
         Continue with Google
       </button>
-
-      <div className="mt-6 flex items-center gap-3 text-xs text-muted">
-        <div className="h-px flex-1 bg-border" />
-        or continue with email
-        <div className="h-px flex-1 bg-border" />
-      </div>
     </div>
   );
 }
