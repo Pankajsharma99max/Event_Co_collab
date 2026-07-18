@@ -6,7 +6,7 @@ import { Stepper } from "@/components/stepper";
 import { PillRadio, PillCheckbox } from "@/components/pill-input";
 import { withBasePath } from "@/lib/base-path";
 
-const REQUIRED_COHOST_EMAIL = "aviral.lancer@gmail.com";
+const REQUIRED_COHOST_EMAIL = process.env.NEXT_PUBLIC_REQUIRED_COHOST_EMAIL || "aviral.lancer@gmail.com";
 
 const EVENT_FORMATS = [
   { value: "IN_PERSON", label: "In-person" },

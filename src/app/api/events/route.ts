@@ -73,6 +73,8 @@ export async function POST(req: Request) {
       websiteUrl: data.websiteUrl,
       platform,
       devnovateEventId: data.devnovateEventId || null,
+      requiredCoHostEmail: process.env.NEXT_PUBLIC_REQUIRED_COHOST_EMAIL || "aviral.lancer@gmail.com",
+      requiredLumaHostId: process.env.REQUIRED_LUMA_HOST_ID || "usr-kpQUGVbfViXAj2x",
       // 96 bits of randomness — infeasible to guess or collide with, so an
       // exact match on this later is a real proof of control, not a guess.
       verificationToken: `devnovate-verify-${randomBytes(12).toString("hex")}`,
