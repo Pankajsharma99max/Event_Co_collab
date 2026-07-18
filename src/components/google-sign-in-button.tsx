@@ -1,7 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
-import { getProviders, signIn } from "next-auth/react";
+import { signIn } from "next-auth/react";
 import { withBasePath } from "@/lib/base-path";
 
 // Only renders once next-auth confirms Google is actually configured
@@ -10,21 +9,7 @@ import { withBasePath } from "@/lib/base-path";
 // getProviders() rather than a raw fetch so it respects the auth base path
 // under a sub-path deployment.
 export function GoogleAuthSection({ callbackUrl }: { callbackUrl: string }) {
-  const [available, setAvailable] = useState(false);
-
-  useEffect(() => {
-    let cancelled = false;
-    getProviders()
-      .then((providers) => {
-        if (!cancelled) setAvailable(Boolean(providers?.google));
-      })
-      .catch(() => {
-        if (!cancelled) setAvailable(false);
-      });
-    return () => {
-      cancelled = true;
-    };
-  }, []);
+  const available = Boolean(process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID);
 
   if (!available) return null;
 
