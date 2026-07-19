@@ -13,8 +13,21 @@ export function proxy(req: NextRequest) {
     const origin = req.headers.get("origin");
     if (origin) {
       const originHost = safeHost(origin);
-      const requestHost = req.nextUrl.host;
-      if (originHost !== requestHost) {
+      // Behind a reverse proxy (Render, Vercel, nginx, the /submit-event
+      // integration, …) the server's own `nextUrl.host` is the INTERNAL host,
+      // not the public domain the browser sent in `Origin` — so comparing
+      // against nextUrl.host alone rejects every same-origin POST in prod.
+      // Accept the origin if it matches ANY plausible representation of the
+      // real host: the proxy-forwarded host, the Host header, or nextUrl.host.
+      // This stays safe: a browser can't set a custom Host/X-Forwarded-Host on
+      // a cross-site request (both are forbidden headers), and the trusted edge
+      // proxy sets x-forwarded-host to the real public domain — so an attacker's
+      // Origin (evil.com) can never appear among these candidates.
+      const forwardedHost = req.headers.get("x-forwarded-host")?.split(",")[0]?.trim();
+      const allowedHosts = new Set(
+        [forwardedHost, req.headers.get("host"), req.nextUrl.host].filter(Boolean)
+      );
+      if (!originHost || !allowedHosts.has(originHost)) {
         return NextResponse.json({ error: "Cross-origin request rejected" }, { status: 403 });
       }
     }
